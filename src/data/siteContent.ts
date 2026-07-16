@@ -1,5 +1,7 @@
 import type { SiteContent } from '../types/content'
 
+const ADDRESS = 'Rua José Sampaio, nº 28, Sala 101 - 1º Andar, Guaraniaçu'
+
 /**
  * Single source of truth for the official Leh Estetic landing page.
  *
@@ -23,8 +25,29 @@ export const siteContent: SiteContent = {
 
   contact: {
     whatsappNumber: '5545998188396',
-    address: 'Rua José Sampaio, nº 28, Sala 101 - 1º Andar, Guaraniaçu',
-    // phone, email, googleMapsUrl: pendentes
+    address: ADDRESS,
+    // phone, email: pendentes
+  },
+
+  location: {
+    address: ADDRESS,
+    // latitude, longitude: pendentes — NÃO inventar. Preencher com as
+    // coordenadas reais da fachada assim que a cliente confirmar (ver
+    // GUIA_ATUALIZACAO_CLIENTE.md). Enquanto forem `null`, as opções de
+    // Street View e Waze do modal "Como chegar" ficam ocultas.
+    latitude: null,
+    longitude: null,
+    // googleMapsPlaceUrl: pendente — link específico do Google Maps (Place),
+    // opcional; a rota já funciona a partir do endereço mesmo sem ele.
+    googleMapsPlaceUrl: '',
+    streetView: {
+      // enabled só deve virar `true` depois que latitude/longitude/heading
+      // reais da fachada forem confirmados.
+      enabled: false,
+      heading: 0,
+      pitch: 0,
+      fov: 80,
+    },
   },
 
   professionals: [

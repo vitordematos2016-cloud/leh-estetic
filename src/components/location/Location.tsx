@@ -1,17 +1,14 @@
+import { useState } from 'react'
 import { Container } from '../ui/Container'
 import { SectionHeading } from '../ui/SectionHeading'
 import { Button } from '../ui/Button'
+import { LocationModal } from './LocationModal'
 import { siteContent } from '../../data/siteContent'
 
 export function Location() {
+  const [modalOpen, setModalOpen] = useState(false)
   const { contact, businessHours } = siteContent
   if (!contact.address && businessHours.length === 0) return null
-
-  const googleMapsUrl =
-    contact.googleMapsUrl ||
-    (contact.address
-      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`
-      : undefined)
 
   return (
     <section id="contato" className="bg-sand-100/60 py-20 sm:py-28">
@@ -41,17 +38,20 @@ export function Location() {
           )}
         </div>
 
-        {googleMapsUrl && (
-          <a
-            href={googleMapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Abrir endereço da Leh Estetic no Google Maps"
+        {contact.address && (
+          <Button
+            variant="secondary"
+            onClick={() => setModalOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={modalOpen}
+            aria-label="Ver opções para chegar até a Leh Estetic"
           >
-            <Button variant="secondary">Como chegar</Button>
-          </a>
+            Como chegar
+          </Button>
         )}
       </Container>
+
+      {modalOpen && <LocationModal onClose={() => setModalOpen(false)} />}
     </section>
   )
 }

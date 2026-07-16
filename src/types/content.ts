@@ -19,7 +19,21 @@ export interface ContactInfo {
   phone?: string
   email?: string
   address?: string
-  googleMapsUrl?: string
+}
+
+export interface StreetViewConfig {
+  enabled: boolean
+  heading: number
+  pitch: number
+  fov: number
+}
+
+export interface LocationInfo {
+  address: string
+  latitude: number | null
+  longitude: number | null
+  googleMapsPlaceUrl: string
+  streetView: StreetViewConfig
 }
 
 export interface SocialLinks {
@@ -141,6 +155,7 @@ export interface SiteSettings {
 export interface SiteContent {
   company: CompanyInfo
   contact: ContactInfo
+  location: LocationInfo
   professionals: ProfessionalProfile[]
   about: AboutInfo
   services: ServiceItem[]
