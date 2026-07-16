@@ -32,7 +32,9 @@ export function LocationModal({ onClose }: LocationModalProps) {
   const showStreetView = location.streetView.enabled && hasCoordinates
   const showWaze = hasCoordinates
 
-  const directionsUrl = buildGoogleMapsDirectionsUrl(location.address)
+  const directionsUrl = buildGoogleMapsDirectionsUrl(
+    hasCoordinates ? `${location.latitude},${location.longitude}` : location.address,
+  )
   const streetViewUrl = hasCoordinates
     ? buildStreetViewUrl(
         location.latitude as number,

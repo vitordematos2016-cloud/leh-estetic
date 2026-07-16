@@ -31,19 +31,17 @@ export const siteContent: SiteContent = {
 
   location: {
     address: ADDRESS,
-    // latitude, longitude: pendentes — NÃO inventar. Preencher com as
-    // coordenadas reais da fachada assim que a cliente confirmar (ver
-    // GUIA_ATUALIZACAO_CLIENTE.md). Enquanto forem `null`, as opções de
-    // Street View e Waze do modal "Como chegar" ficam ocultas.
-    latitude: null,
-    longitude: null,
+    // Coordenadas oficiais confirmadas pela cliente.
+    latitude: -25.09952986593139,
+    longitude: -52.870404056863315,
     // googleMapsPlaceUrl: pendente — link específico do Google Maps (Place),
-    // opcional; a rota já funciona a partir do endereço mesmo sem ele.
+    // opcional; a rota já funciona a partir das coordenadas mesmo sem ele.
     googleMapsPlaceUrl: '',
     streetView: {
-      // enabled só deve virar `true` depois que latitude/longitude/heading
-      // reais da fachada forem confirmados.
-      enabled: false,
+      enabled: true,
+      // heading ainda precisa de ajuste fino: 0 é o valor inicial pedido,
+      // mas depois do primeiro teste real precisamos girar esse número até
+      // a câmera do Street View apontar exatamente para a fachada.
       heading: 0,
       pitch: 0,
       fov: 80,
