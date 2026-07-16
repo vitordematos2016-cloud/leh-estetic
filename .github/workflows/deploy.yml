@@ -37,6 +37,26 @@ jobs:
       - name: Check secret - FTP_SERVER_DIR
         run: '[ -n "${{ secrets.FTP_SERVER_DIR }}" ]'
 
+      - name: Diagnose secret formatting (no values printed)
+        env:
+          S: ${{ secrets.FTP_SERVER }}
+          U: ${{ secrets.FTP_USERNAME }}
+          P: ${{ secrets.FTP_PASSWORD }}
+          D: ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          check() {
+            name="$1"; value="$2"
+            len=${#value}
+            trimmed=$(printf '%s' "$value" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            trimmedlen=${#trimmed}
+            lines=$(printf '%s' "$value" | wc -l)
+            echo "$name: length=$len trimmed_length=$trimmedlen extra_newlines=$lines"
+          }
+          check FTP_SERVER "$S"
+          check FTP_USERNAME "$U"
+          check FTP_PASSWORD "$P"
+          check FTP_SERVER_DIR "$D"
+
       - name: Normalize FTP inputs
         id: ftp
         run: |
