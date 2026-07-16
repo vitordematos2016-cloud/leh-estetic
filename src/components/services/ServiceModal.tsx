@@ -1,17 +1,20 @@
 import { useEffect } from 'react'
-import { ImagePlaceholder } from '../ui/ImagePlaceholder'
+import { MediaSlot } from '../ui/MediaSlot'
 import { Button } from '../ui/Button'
-import { useSelection } from '../../context/SelectionContext'
-import type { Treatment } from '../../types'
+import { siteContent } from '../../data/siteContent'
+import { buildWhatsAppUrl, serviceMessage } from '../../utils/whatsapp'
+import type { ServiceItem } from '../../types/content'
 
-interface TreatmentModalProps {
-  treatment: Treatment
+interface ServiceModalProps {
+  service: ServiceItem
   onClose: () => void
 }
 
-export function TreatmentModal({ treatment, onClose }: TreatmentModalProps) {
-  const { isSelected, addTreatment, removeTreatment } = useSelection()
-  const selected = isSelected(treatment.id)
+export function ServiceModal({ service, onClose }: ServiceModalProps) {
+  const { settings, contact } = siteContent
+  const bookingUrl = contact.whatsappNumber
+    ? buildWhatsAppUrl(contact.whatsappNumber, serviceMessage(service.name))
+    : undefined
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -34,15 +37,21 @@ export function TreatmentModal({ treatment, onClose }: TreatmentModalProps) {
         className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-y-auto rounded-3xl bg-sand-50 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <ImagePlaceholder label="Imagem a confirmar" aspect="aspect-[16/9]" className="rounded-b-none" />
+        <MediaSlot
+          src={service.image}
+          alt={service.name}
+          placeholderLabel="Imagem em atualização"
+          aspect="aspect-[16/9]"
+          rounded="rounded-t-3xl"
+        />
 
         <div className="flex flex-col gap-4 p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4">
             <div>
               <span className="text-xs font-medium tracking-[0.2em] text-clay-500 uppercase">
-                {treatment.category}
+                {service.category}
               </span>
-              <h3 className="font-display text-2xl font-semibold text-ink-900">{treatment.name}</h3>
+              <h3 className="font-display text-2xl font-semibold text-ink-900">{service.name}</h3>
             </div>
             <button
               onClick={onClose}
@@ -55,11 +64,11 @@ export function TreatmentModal({ treatment, onClose }: TreatmentModalProps) {
             </button>
           </div>
 
-          <p className="text-base text-ink-700/90">{treatment.description}</p>
+          <p className="text-base text-ink-700/90">{service.description}</p>
 
-          {treatment.benefits.length > 0 && (
+          {service.benefits.length > 0 && (
             <ul className="flex flex-col gap-2">
-              {treatment.benefits.map((benefit) => (
+              {service.benefits.map((benefit) => (
                 <li key={benefit} className="flex items-start gap-2 text-sm text-ink-700/90">
                   <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-clay-400" />
                   {benefit}
@@ -68,28 +77,39 @@ export function TreatmentModal({ treatment, onClose }: TreatmentModalProps) {
             </ul>
           )}
 
-          {treatment.technology && (
+          {service.technology && (
             <p className="text-sm text-ink-700/70">
-              <span className="font-medium text-ink-800">Tecnologia/ativo:</span> {treatment.technology}
+              <span className="font-medium text-ink-800">Tecnologia/ativo:</span> {service.technology}
             </p>
           )}
+
+          <div className="flex flex-wrap gap-4 text-sm text-ink-700/70">
+            {settings.showProcedureDuration && service.durationMinutes && (
+              <span>Duração aproximada: {service.durationMinutes} min</span>
+            )}
+            {settings.showPrices && (
+              <span>{service.price ? formatPrice(service.price) : 'Valor sob consulta'}</span>
+            )}
+          </div>
 
           <p className="rounded-xl bg-sand-100 p-4 text-xs text-ink-700/70">
             A indicação, o número de sessões e os resultados dependem de avaliação individual com a
             profissional.
           </p>
 
-          <p className="text-[11px] text-ink-700/50">{treatment.sourceNote}</p>
-
-          <Button
-            variant={selected ? 'ghost' : 'primary'}
-            className="mt-2 w-full"
-            onClick={() => (selected ? removeTreatment(treatment.id) : addTreatment(treatment))}
-          >
-            {selected ? 'Adicionado à Minha Seleção ✓' : 'Adicionar à Minha Seleção'}
-          </Button>
+          {bookingUrl && (
+            <a href={bookingUrl} target="_blank" rel="noopener noreferrer" aria-label={`Agendar ${service.name} pelo WhatsApp`}>
+              <Button variant="primary" className="w-full">
+                Agendar este serviço
+              </Button>
+            </a>
+          )}
         </div>
       </div>
     </div>
   )
+}
+
+function formatPrice(value: number): string {
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }

@@ -1,14 +1,7 @@
-import { CatalogPage } from './pages/CatalogPage'
-import { ManagerPage } from './pages/ManagerPage'
+import { LandingPage } from './pages/LandingPage'
 
 function App() {
-  const path = window.location.pathname.replace(/\/+$/, '') || '/'
-
-  if (path === '/gestao') {
-    return <ManagerPage />
-  }
-
-  return <CatalogPage />
+  return <LandingPage />
 }
 
 export default App

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://leh-estetic.matossolucoes.com/sitemap.xml
