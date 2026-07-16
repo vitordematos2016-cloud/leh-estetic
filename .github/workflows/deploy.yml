@@ -25,18 +25,17 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Check required secrets are set
-        run: |
-          missing=""
-          [ -z "${{ secrets.FTP_SERVER }}" ] && missing="$missing FTP_SERVER"
-          [ -z "${{ secrets.FTP_USERNAME }}" ] && missing="$missing FTP_USERNAME"
-          [ -z "${{ secrets.FTP_PASSWORD }}" ] && missing="$missing FTP_PASSWORD"
-          [ -z "${{ secrets.FTP_SERVER_DIR }}" ] && missing="$missing FTP_SERVER_DIR"
-          if [ -n "$missing" ]; then
-            echo "::error::Missing repository secrets:$missing — add them under Settings > Secrets and variables > Actions"
-            exit 1
-          fi
-          echo "All required FTP secrets are present."
+      - name: Check secret - FTP_SERVER
+        run: '[ -n "${{ secrets.FTP_SERVER }}" ]'
+
+      - name: Check secret - FTP_USERNAME
+        run: '[ -n "${{ secrets.FTP_USERNAME }}" ]'
+
+      - name: Check secret - FTP_PASSWORD
+        run: '[ -n "${{ secrets.FTP_PASSWORD }}" ]'
+
+      - name: Check secret - FTP_SERVER_DIR
+        run: '[ -n "${{ secrets.FTP_SERVER_DIR }}" ]'
 
       - name: Deploy dist/ via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
