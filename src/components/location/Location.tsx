@@ -4,8 +4,14 @@ import { Button } from '../ui/Button'
 import { siteContent } from '../../data/siteContent'
 
 export function Location() {
-  const { contact, businessHours, settings } = siteContent
+  const { contact, businessHours } = siteContent
   if (!contact.address && businessHours.length === 0) return null
+
+  const googleMapsUrl =
+    contact.googleMapsUrl ||
+    (contact.address
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`
+      : undefined)
 
   return (
     <section id="contato" className="bg-sand-100/60 py-20 sm:py-28">
@@ -35,9 +41,14 @@ export function Location() {
           )}
         </div>
 
-        {settings.showMap && contact.googleMapsUrl && (
-          <a href={contact.googleMapsUrl} target="_blank" rel="noopener noreferrer">
-            <Button variant="secondary">Abrir rota</Button>
+        {googleMapsUrl && (
+          <a
+            href={googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Abrir endereço da Leh Estetic no Google Maps"
+          >
+            <Button variant="secondary">Como chegar</Button>
           </a>
         )}
       </Container>
