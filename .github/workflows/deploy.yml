@@ -37,12 +37,30 @@ jobs:
       - name: Check secret - FTP_SERVER_DIR
         run: '[ -n "${{ secrets.FTP_SERVER_DIR }}" ]'
 
+      - name: Normalize FTP inputs
+        id: ftp
+        run: |
+          server="${{ secrets.FTP_SERVER }}"
+          server="${server#ftp://}"
+          server="${server#ftps://}"
+          dir="${{ secrets.FTP_SERVER_DIR }}"
+          case "$dir" in
+            */) ;;
+            *) dir="$dir/" ;;
+          esac
+          case "$dir" in
+            /*) ;;
+            *) dir="/$dir" ;;
+          esac
+          echo "server=$server" >> "$GITHUB_OUTPUT"
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+
       - name: Deploy dist/ via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ steps.ftp.outputs.server }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT || '21' }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          server-dir: ${{ steps.ftp.outputs.dir }}
           local-dir: dist/
