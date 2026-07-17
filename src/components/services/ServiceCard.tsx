@@ -10,17 +10,17 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ service, onViewDetails }: ServiceCardProps) {
-  const { settings, contact } = siteContent
+  const { contact } = siteContent
   const bookingUrl = contact.whatsappNumber
     ? buildWhatsAppUrl(contact.whatsappNumber, serviceMessage(service.name))
     : undefined
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-3xl border border-ink-900/8 bg-white/60 shadow-sm shadow-ink-900/5">
+    <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-ink-900/8 bg-white/60 shadow-sm shadow-ink-900/5">
       <MediaSlot
         src={service.image}
         alt={service.name}
-        placeholderLabel="Imagem em atualização"
+        placeholderLabel="Imagem do serviço será adicionada"
         aspect="aspect-[4/3]"
         rounded="rounded-t-3xl"
       />
@@ -32,12 +32,8 @@ export function ServiceCard({ service, onViewDetails }: ServiceCardProps) {
         {service.subtitle && <p className="text-sm text-ink-700/80">{service.subtitle}</p>}
 
         <div className="mt-1 flex flex-wrap gap-3 text-xs text-ink-700/60">
-          {settings.showProcedureDuration && service.durationMinutes && (
-            <span>{service.durationMinutes} min</span>
-          )}
-          {settings.showPrices && (
-            <span>{service.price ? formatPrice(service.price) : 'Valor sob consulta'}</span>
-          )}
+          <span>{service.durationMinutes ? `${service.durationMinutes} min` : 'Duração a confirmar'}</span>
+          <span>{service.price ? formatPrice(service.price) : 'Valor sob consulta'}</span>
         </div>
 
         <div className="mt-auto flex flex-col gap-2 pt-4 sm:flex-row">

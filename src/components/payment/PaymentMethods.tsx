@@ -17,13 +17,14 @@ export function PaymentMethods() {
 
   return (
     <section className="py-16">
-      <Container className="flex flex-col items-center gap-6 text-center">
+      <Container className="flex flex-col items-center gap-4 text-center">
         <SectionHeading eyebrow="Pagamento" title="Formas de pagamento" align="center" />
+        <p className="text-xs text-ink-700/50">Opções abaixo ainda aguardam confirmação da profissional.</p>
         <div className="flex flex-wrap justify-center gap-3">
           {paymentMethods.map((method) => (
             <span
               key={method}
-              className="rounded-full border border-ink-900/15 px-4 py-2 text-sm font-medium text-ink-800"
+              className="rounded-full border border-dashed border-ink-800/30 px-4 py-2 text-sm font-medium text-ink-800"
             >
               {labels[method]}
             </span>

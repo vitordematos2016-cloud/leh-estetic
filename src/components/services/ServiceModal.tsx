@@ -11,7 +11,7 @@ interface ServiceModalProps {
 }
 
 export function ServiceModal({ service, onClose }: ServiceModalProps) {
-  const { settings, contact } = siteContent
+  const { contact } = siteContent
   const bookingUrl = contact.whatsappNumber
     ? buildWhatsAppUrl(contact.whatsappNumber, serviceMessage(service.name))
     : undefined
@@ -34,13 +34,16 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="service-modal-title"
         className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-y-auto rounded-3xl bg-sand-50 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <MediaSlot
           src={service.image}
           alt={service.name}
-          placeholderLabel="Imagem em atualização"
+          placeholderLabel="Imagem do serviço será adicionada"
           aspect="aspect-[16/9]"
           rounded="rounded-t-3xl"
         />
@@ -51,12 +54,14 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               <span className="text-xs font-medium tracking-[0.2em] text-clay-500 uppercase">
                 {service.category}
               </span>
-              <h3 className="font-display text-2xl font-semibold text-ink-900">{service.name}</h3>
+              <h3 id="service-modal-title" className="font-display text-2xl font-semibold text-ink-900">
+                {service.name}
+              </h3>
             </div>
             <button
               onClick={onClose}
               aria-label="Fechar"
-              className="rounded-full border border-ink-900/15 p-2 text-ink-800 hover:border-clay-500 hover:text-clay-600 cursor-pointer"
+              className="rounded-full border border-ink-900/15 p-2 text-ink-800 hover:border-clay-500 hover:text-clay-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-500"
             >
               <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                 <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -83,13 +88,27 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
             </p>
           )}
 
+          {service.indication && (
+            <p className="text-sm text-ink-700/70">
+              <span className="font-medium text-ink-800">Indicação:</span> {service.indication}
+            </p>
+          )}
+
+          {service.careInstructions && (
+            <p className="text-sm text-ink-700/70">
+              <span className="font-medium text-ink-800">Cuidados:</span> {service.careInstructions}
+            </p>
+          )}
+
+          {service.notes && (
+            <p className="text-sm text-ink-700/70">
+              <span className="font-medium text-ink-800">Observações:</span> {service.notes}
+            </p>
+          )}
+
           <div className="flex flex-wrap gap-4 text-sm text-ink-700/70">
-            {settings.showProcedureDuration && service.durationMinutes && (
-              <span>Duração aproximada: {service.durationMinutes} min</span>
-            )}
-            {settings.showPrices && (
-              <span>{service.price ? formatPrice(service.price) : 'Valor sob consulta'}</span>
-            )}
+            <span>Duração: {service.durationMinutes ? `${service.durationMinutes} min` : 'a confirmar'}</span>
+            <span>{service.price ? formatPrice(service.price) : 'Valor sob consulta'}</span>
           </div>
 
           <p className="rounded-xl bg-sand-100 p-4 text-xs text-ink-700/70">

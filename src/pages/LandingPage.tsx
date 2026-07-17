@@ -13,6 +13,7 @@ import { Faq } from '../components/faq/Faq'
 import { Booking } from '../components/booking/Booking'
 import { Location } from '../components/location/Location'
 import { PaymentMethods } from '../components/payment/PaymentMethods'
+import { WhatsAppFloatingButton } from '../components/whatsapp/WhatsAppFloatingButton'
 
 export function LandingPage() {
   return (
@@ -34,6 +35,7 @@ export function LandingPage() {
         <PaymentMethods />
       </main>
       <Footer />
+      <WhatsAppFloatingButton />
     </>
   )
 }

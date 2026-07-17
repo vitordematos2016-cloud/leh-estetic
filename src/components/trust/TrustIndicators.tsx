@@ -2,8 +2,8 @@ import { Container } from '../ui/Container'
 import { siteContent } from '../../data/siteContent'
 
 export function TrustIndicators() {
-  const { settings, statistics } = siteContent
-  if (!settings.showStatistics || statistics.length === 0) return null
+  const { statistics } = siteContent
+  if (statistics.length === 0) return null
 
   return (
     <section className="border-y border-ink-900/8 bg-white/60 py-10">

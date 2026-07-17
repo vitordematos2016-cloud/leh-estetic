@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { siteContent } from '../../data/siteContent'
-import { buildGoogleMapsDirectionsUrl, buildStreetViewUrl, buildWazeUrl } from '../../utils/maps'
+import { buildGoogleMapsDirectionsUrl, buildWazeUrl } from '../../utils/maps'
 
 interface LocationModalProps {
   onClose: () => void
@@ -29,21 +29,10 @@ export function LocationModal({ onClose }: LocationModalProps) {
   }, [onClose])
 
   const hasCoordinates = location.latitude !== null && location.longitude !== null
-  const showStreetView = location.streetView.enabled && hasCoordinates
-  const showWaze = hasCoordinates
 
   const directionsUrl = buildGoogleMapsDirectionsUrl(
     hasCoordinates ? `${location.latitude},${location.longitude}` : location.address,
   )
-  const streetViewUrl = hasCoordinates
-    ? buildStreetViewUrl(
-        location.latitude as number,
-        location.longitude as number,
-        location.streetView.heading,
-        location.streetView.pitch,
-        location.streetView.fov,
-      )
-    : undefined
   const wazeUrl = hasCoordinates ? buildWazeUrl(location.latitude as number, location.longitude as number) : undefined
 
   const handleCopy = async () => {
@@ -87,46 +76,37 @@ export function LocationModal({ onClose }: LocationModalProps) {
         <p className="mt-2 text-sm text-ink-700/70">{location.address}</p>
 
         <div className="mt-6 flex flex-col gap-3">
-          {showStreetView && streetViewUrl && (
-            <a
-              href={streetViewUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Ver a entrada da Leh Estetic em 360° no Google Street View"
-              className="flex items-center gap-4 rounded-2xl border border-ink-900/8 bg-white/60 p-4 text-left transition-colors hover:border-clay-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-500"
-            >
-              <IconWrap>
-                <StreetViewIcon />
-              </IconWrap>
-              <span className="text-sm font-medium text-ink-900">Ver entrada em 360°</span>
-            </a>
-          )}
-
           <a
             href={directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Traçar rota até a Leh Estetic no Google Maps"
+            aria-label="Ver rotas até a Leh Estetic no Google Maps"
             className="flex items-center gap-4 rounded-2xl border border-ink-900/8 bg-white/60 p-4 text-left transition-colors hover:border-clay-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-500"
           >
             <IconWrap>
               <MapPinIcon />
             </IconWrap>
-            <span className="text-sm font-medium text-ink-900">Traçar rota no Google Maps</span>
+            <span className="flex flex-col">
+              <span className="text-sm font-medium text-ink-900">Google Maps</span>
+              <span className="text-xs text-ink-700/60">Ver rotas e escolher como chegar.</span>
+            </span>
           </a>
 
-          {showWaze && wazeUrl && (
+          {wazeUrl && (
             <a
               href={wazeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Abrir a Leh Estetic no Waze"
+              aria-label="Iniciar navegação até a Leh Estetic no Waze"
               className="flex items-center gap-4 rounded-2xl border border-ink-900/8 bg-white/60 p-4 text-left transition-colors hover:border-clay-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-500"
             >
               <IconWrap>
                 <WazeIcon />
               </IconWrap>
-              <span className="text-sm font-medium text-ink-900">Abrir no Waze</span>
+              <span className="flex flex-col">
+                <span className="text-sm font-medium text-ink-900">Waze</span>
+                <span className="text-xs text-ink-700/60">Iniciar navegação de carro.</span>
+              </span>
             </a>
           )}
 
@@ -138,12 +118,43 @@ export function LocationModal({ onClose }: LocationModalProps) {
             <IconWrap>
               <CopyIcon />
             </IconWrap>
-            <span className="text-sm font-medium text-ink-900">Copiar endereço</span>
+            <span className="flex flex-col">
+              <span className="text-sm font-medium text-ink-900">Copiar endereço</span>
+              <span className="text-xs text-ink-700/60" aria-live="polite">
+                {copied ? 'Endereço copiado' : 'Copiar para a área de transferência.'}
+              </span>
+            </span>
           </button>
 
-          <p className="min-h-[1.25rem] text-xs text-clay-600" aria-live="polite">
-            {copied && 'Endereço copiado'}
-          </p>
+          <a
+            href="#espaco"
+            onClick={onClose}
+            aria-label="Ver a foto da fachada da Leh Estetic"
+            className="flex items-center gap-4 rounded-2xl border border-ink-900/8 bg-white/60 p-4 text-left transition-colors hover:border-clay-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-500"
+          >
+            <IconWrap>
+              <FacadeIcon />
+            </IconWrap>
+            <span className="flex flex-col">
+              <span className="text-sm font-medium text-ink-900">Ver fachada</span>
+              <span className="text-xs text-ink-700/60">Abrir o espaço reservado para a foto da fachada.</span>
+            </span>
+          </a>
+
+          <a
+            href="#espaco"
+            onClick={onClose}
+            aria-label="Conhecer o espaço da Leh Estetic"
+            className="flex items-center gap-4 rounded-2xl border border-ink-900/8 bg-white/60 p-4 text-left transition-colors hover:border-clay-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-500"
+          >
+            <IconWrap>
+              <GalleryIcon />
+            </IconWrap>
+            <span className="flex flex-col">
+              <span className="text-sm font-medium text-ink-900">Conhecer o espaço</span>
+              <span className="text-xs text-ink-700/60">Abrir a galeria preparada.</span>
+            </span>
+          </a>
         </div>
       </div>
     </div>
@@ -162,27 +173,6 @@ function CloseIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function StreetViewIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="8" r="3" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M4 18c0-3 3.5-5 8-5s8 2 8 5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M2.5 14a10 10 0 0 1 19 0"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeDasharray="2 2.5"
-      />
     </svg>
   )
 }
@@ -219,6 +209,26 @@ function CopyIcon() {
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
       <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  )
+}
+
+function FacadeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 21V9l8-5 8 5v12" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M9 21v-6h6v6" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M9 12h.01M15 12h.01" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function GalleryIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="5" width="14" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="8" cy="10" r="1.4" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M5 17l4-4 3 3 3-4 4 5" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
     </svg>
   )
 }

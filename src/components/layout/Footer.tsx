@@ -2,7 +2,7 @@ import { Container } from '../ui/Container'
 import { siteContent } from '../../data/siteContent'
 
 export function Footer() {
-  const { company, contact, socialLinks, businessHours } = siteContent
+  const { company, contact, socialLinks, businessHours, footer } = siteContent
   const year = new Date().getFullYear()
 
   const socials = [
@@ -15,6 +15,16 @@ export function Footer() {
     <footer className="border-t border-ink-900/8 py-12">
       <Container className="flex flex-col items-center gap-6 text-center">
         <p className="font-display text-lg font-semibold text-ink-900">{company.name}</p>
+
+        {footer.quickLinks.length > 0 && (
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            {footer.quickLinks.map((link) => (
+              <a key={link.href} href={link.href} className="text-sm text-ink-700/70 hover:text-clay-600">
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        )}
 
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-ink-700/70">
           {contact.phone && <span>{contact.phone}</span>}
@@ -52,11 +62,9 @@ export function Footer() {
           © {year} {company.name}. Todos os direitos reservados.
         </p>
 
-        <p className="text-xs leading-relaxed text-ink-700/40">
-          Conteúdo em atualização — página em fase de finalização com a profissional.
-        </p>
+        <p className="text-xs leading-relaxed text-ink-700/40">{footer.provisionalNotice}</p>
 
-        <p className="text-[11px] text-ink-700/30">Desenvolvido por Matos Soluções</p>
+        <p className="text-[11px] text-ink-700/30">{footer.credit}</p>
       </Container>
     </footer>
   )

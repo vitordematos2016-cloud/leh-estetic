@@ -23,7 +23,7 @@ export function bookingMessage(): string {
 }
 
 export function serviceMessage(serviceName: string): string {
-  return `Olá! Conheci o procedimento ${serviceName} pelo site da ${COMPANY_NAME} e gostaria de verificar valores e horários disponíveis.`
+  return `Olá! Conheci o serviço ${serviceName} pelo site da ${COMPANY_NAME} e gostaria de verificar informações e horários disponíveis.`
 }
 
 export function packageMessage(packageName: string): string {
